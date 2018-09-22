@@ -1,10 +1,10 @@
-[![License](https://img.shields.io/badge/license-%20BSD--3-blue.svg)](../master/LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](../master/LICENSE)
 
 # playfair
 
-Playfair cipher
-Adapted from http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-playfair/
+Playfair cipher cracker
 
+Adapted from http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-playfair/
 
 ## How to build
 
@@ -12,8 +12,8 @@ Adapted from http://practicalcryptography.com/cryptanalysis/stochastic-searching
 cmake -H. -Bbuild -DCMAKE_INSTALL_PREFIX:PATH=/tmp/foo
 cd build
 cmake --build .
-ctest
-cmake --build . --target install
+./bin/unit_tests
+./bin/main.x
 ```
 
 ## Usage Examples
