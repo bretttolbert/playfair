@@ -3,6 +3,7 @@
 #include "qgram_data_fr.h"
 #include <algorithm>
 #include <random>
+#include <iostream>
 
 namespace scoretext
 {
@@ -40,10 +41,15 @@ namespace scoretext
     size_t get_qgram_stats_array_idx(const std::string& qgram)
     {
         char temp[4];
-        temp[0]=qgram[0]-'A';
-        temp[1]=qgram[1]-'A';
-        temp[2]=qgram[2]-'A';
-        temp[3]=qgram[3]-'A';
+        for (size_t i=0; i<4; ++i)
+        {
+            char c = qgram[i];
+            if (c < 'A' || c > 'Z')
+            {
+                throw InvalidTextException();
+            }
+            temp[i] = c - 'A';
+        }
         return 17576*temp[0] + 676*temp[1] + 26*temp[2] + temp[3];      
     }
 

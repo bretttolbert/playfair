@@ -20,6 +20,14 @@ namespace scoretext
         }
     };
 
+    struct InvalidTextException: public std::exception
+    {
+        const char* what() const throw()
+        {
+            return "Invalid text";
+        }
+    };
+
     /**
      * Returns a random string of the given length consisting only of uppercase letters
      */

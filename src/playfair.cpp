@@ -196,7 +196,9 @@ namespace playfair
 
     std::string decipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key)
     {
-        return encipher_digraphs(digraphs, key, true);
+        std::string s = encipher_digraphs(digraphs, key, true);
+        s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
+        return s;
     }
 
     std::string encipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key, bool decipher)
