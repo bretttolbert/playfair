@@ -1,10 +1,15 @@
-#pragma once
+#ifndef PLAYFAIR_H
+#define PLAYFAIR_H
 #include <string>
 #include <vector>
 #include <exception>
 
 namespace playfair
 {
+    const std::string ASCII_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    extern char omitted_letter, omitted_letter_sub, separator_letter;
+
     struct InvalidKeyException: public std::exception
     {
         const char* what() const throw()
@@ -13,7 +18,7 @@ namespace playfair
         }
     };
 
-    const std::string CIPHER_ALPHABET = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+    std::string get_cipher_alphabet();
 
     std::string strip_repeated_letters(const std::string& key);
 
@@ -43,7 +48,8 @@ namespace playfair
      * Converts accented characters to normal
      * Converts to uppercase
      * Removes whitespace
-     * Converts OMITTED_LETTER (default=J) to OMITTED_LETTER_SUBSTITUTE (default=I)
+     * Converts omitted_letter (default=J) to omitted_letter_sub (default=I)
      */
     std::string fmt_ciphertext(const std::string& text);
 }
+#endif

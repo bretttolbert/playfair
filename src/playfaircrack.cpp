@@ -149,7 +149,7 @@ namespace playfair
         std::cout << "Attemping to crack:\n" << ciphertext << std::endl;
         std::cout << "Presumed language: " << lang << std::endl;
         std::cout << "This may take a few minutes.\n";
-        std::string key = CIPHER_ALPHABET;
+        std::string key = get_cipher_alphabet();
 
         std::string plaintext = decipher_digraphs(digraphs, gen_cipher_table(key));
         double maxscore = scoretext::score_text_qgram(plaintext, lang);

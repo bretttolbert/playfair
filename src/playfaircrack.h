@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYFAIRCRACK_H
+#define PLAYFAIRCRACK_H
 #include "playfair.h"
 #include <string>
 
@@ -9,3 +10,5 @@ namespace playfair
     const size_t ITERATIONS = 10000;
     double crack(const std::string& ciphertext, std::string lang="en");
 }
+
+#endif

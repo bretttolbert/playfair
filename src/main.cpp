@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include "config.h"
-#include "playfair.h"
 #include "playfaircrack.h"
 
 /*
@@ -25,7 +24,10 @@ void show_usage(const std::string& progname)
     std::cout << "Usage:\n";
     std::cout << progname << " --encipher <plaintext> <key>\n";
     std::cout << progname << " --decipher <ciphertext> <key>\n";
-    std::cout << progname << " --crack <ciphertext> [--lang <lang>]\n";
+    std::cout << progname << " --crack <ciphertext> [--lang en|fr]\n";
+    std::cout << "Advanced options:\n";
+    std::cout << "--sub <omitted_letter><omitted_letter_substitute> (default is JI)\n";
+    std::cout << "--sep <separator_letter> (default is X)\n";
 }
 
 int main(int argc, char** argv)
@@ -39,13 +41,46 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    std::string lang = "en";
+
     std::string operation = argv[1];
+    for (size_t i=3; i+1<argc; ++i)
+    {
+        std::string arg(argv[i]);
+        std::string val(argv[i+1]);
+        if (arg == "--lang" || arg == "--langue")
+        {
+            lang = val;
+        }
+        else if (arg == "--sub")
+        {
+            if (val.length() != 2 || val.find_first_not_of(ASCII_UPPERCASE) != std::string::npos)
+            {
+                std::cerr << "Invalid value for --sub argument.\n";
+                std::cerr << "Expected two uppercase letters (omitted_letter_substitute and omitted_letter) e.g. --sub WV\n";
+                return -1;
+            }
+            omitted_letter = val[0];
+            omitted_letter_sub = val[1];
+        }
+        else if (arg == "--sep")
+        {
+            if (val.length() != 1 || ASCII_UPPERCASE.find(val) == std::string::npos)
+            {
+                std::cerr << "Invalid value for --sep argument.\n";
+                std::cerr << "Expected an uppercase letter e.g. --sep Q\n";
+                return -1;
+            }
+            separator_letter = val[0];
+        }
+    }
+
     if (operation == "--encipher" || operation == "--chiffrer")
     {
         std::string plaintext = argv[2];
         std::string key = argv[3];
         std::string ciphertext = encipher(plaintext, key);
-        std::cout << "ciphertext:\n";
+        std::cout << "Ciphertext:\n";
         std::cout << ciphertext << std::endl;
     }
     else if (operation == "--decipher" || operation == "--dechiffrer")
@@ -53,21 +88,12 @@ int main(int argc, char** argv)
         std::string ciphertext = argv[2];
         std::string key = argv[3];
         std::string plaintext = decipher(ciphertext, key);
-        std::cout << "deciphered:\n";
+        std::cout << "Deciphered:\n";
         std::cout << plaintext << std::endl;
     }
     else if (operation == "--crack" || operation == "--craquer")
     {
         std::string ciphertext = argv[2];
-        std::string lang = "en";
-        if (argc >= 5)
-        {
-            std::string larg = std::string(argv[3]);
-            if (larg == "--lang" || larg == "--langue")
-            {
-                lang = argv[4];
-            }
-        }
         crack(ciphertext, lang);
     }
     else

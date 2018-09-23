@@ -54,11 +54,14 @@ TEST(playfair, plaintext_to_digrams)
     ASSERT_EQ(to_digraphs("Hide the gold in the tree stump"), expected);
     expected = {"CH", "AT", "EA", "UX"};
     ASSERT_EQ(to_digraphs("château"), expected);
+    separator_letter = 'Q';
+    expected = {"BA", "TQ", "TA", "LI", "ON"};
+    ASSERT_EQ(to_digraphs("battalion"), expected);
 }
 
 TEST(playfair, gen_cipher_table_string)
 {
-    ASSERT_EQ(gen_cipher_table_string(""), CIPHER_ALPHABET);
+    ASSERT_EQ(gen_cipher_table_string(""), get_cipher_alphabet());
     ASSERT_EQ(gen_cipher_table_string("PALMERSTON"), "PALMERSTONBCDFGHIKQUVWXYZ");
     ASSERT_EQ(gen_cipher_table_string("PASWD"), "PASWDBCEFGHIKLMNOQRTUVXYZ");
     ASSERT_EQ(gen_cipher_table_string("exemple playfair"), "EXMPLAYFIRBCDGHKNOQSTUVWZ");
@@ -124,4 +127,13 @@ TEST(playfair, encipher_decipher_fr)
     ASSERT_EQ(encipher(TEST_TEXT_FR, "VOLTAIRE"), expected_ciphertext);
     std::string expected_plaintext = "ILYAVAITENWESTPHALIEDANSLECHATEAUDEMONSIEURLEBARONDETHUNDERTENTRONCKHUNIEUNEGARCONAQUILANATUREAVAITDONNELESMURSLESPLUSDOUCESSAPHYSIONOMIEANXNONCAITSONAMEILAVAITLEIUGEMENTASSEZDROITAVECLESPRITLEPLUSXSIMPLECESTIECROISPOURCETTERAISONQUONLENOMXMAITCANDIDELESANCIENSDOMESTIQUESDELAMAISONSOUPCONXNAIENTQUILETAITFILSDELASURDEMONSIEURLEBARONETDUNBONETHONNETEGENTILHOMXMEDUVOISINAGEQUECETXTEDEMOISELLENEVOULUTIAMAISEPOUSERPARCEQUILNAVAITPUPROUVERQUESOIXANTEETONZEQUARTIERSETQUELERESTEDESONARBREGENEALOGIQUEAVAITETEPERDUPARLINIUREDUTEMPSX";
     ASSERT_EQ(decipher(expected_ciphertext, "VOLTAIRE"), expected_plaintext);
+}
+
+TEST(playfair, decipher_fr_sub)
+{
+    omitted_letter = 'W';
+    omitted_letter_sub = 'V';
+    std::string expected_ciphertext = "BY DB XE QI BF JU ER VJ TD BL BM ER AH AL ";
+    ASSERT_EQ(encipher("Cache l'or dans la souche de l'arbre", "exemple playfair"), expected_ciphertext);
+    ASSERT_EQ(decipher(expected_ciphertext, "exemple playfair"), "CACHELORDANSLASOUCHEDELARBRE");
 }

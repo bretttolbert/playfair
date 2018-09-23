@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SCORETEXT_H
+#define SCORETEXT_H
 #include <string>
 
 /**
@@ -50,3 +51,5 @@ namespace scoretext
      */
     double score_text_qgram(const std::string& text, const std::string& lang);
 }
+
+#endif

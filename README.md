@@ -16,31 +16,45 @@ cmake --build .
 ./bin/main.x
 ```
 
+## Usage
+```
+./bin/main.x --encipher <plaintext> <key>
+./bin/main.x --decipher <ciphertext> <key>
+./bin/main.x --crack <ciphertext> [--lang en|fr]
+```
+Advanced options
+```
+--sub <omitted_letter><omitted_letter_substitute> (default is JI)
+--sep <separator_letter> (default is X)
+```
+
 ## Usage Examples
 
 ```
 ./bin/main.x --encipher "Hide the gold in the tree stump" "playfair example"
-key table:
+Omitted letter: 'J' Substitute: 'I'
+Key Table:
 P L A Y F 
 I R E X M 
 B C D G H 
 K N O Q S 
 T U V W Z 
-digraphs:
+Digraphs:
 HI DE TH EG OL DI NT HE TR EX ES TU MP 
-ciphertext:
+Ciphertext:
 BM OD ZB XD NA BE KU DM UI XM MO UV IF 
 
 ./bin/main.x --decipher "BM OD ZB XD NA BE KU DM UI XM MO UV IF" "playfair example"
-key table:
+Omitted letter: 'J' Substitute: 'I'
+Key Table:
 P L A Y F 
 I R E X M 
 B C D G H 
 K N O Q S 
 T U V W Z 
-digraphs:
+Digraphs:
 BM OD ZB XD NA BE KU DM UI XM MO UV IF 
-deciphered:
+Deciphered:
 HIDETHEGOLDINTHETREXESTUMP
 
 ./bin/main.x --crack XZOGQRWVQWNROKCOAELBXZWGEQYLGDRZXYZRQAEKLRHDUMNUXYXSXYEMXEHDGNXZYNTZONYELBEUGYSCOREUSWTZRLRYBYCOLZYLEMWNSXFBUSDBORBZCYLQEDMHQRWVQWAEDPGDPOYHORXZINNYWPXZGROKCOLCCOCYTZUEUIICERLEVHMVQWLNWPRYXHGNMLEKLRHDUYSUCYRAWPUYECRYRYXHGNBLUYSCCOUYOHRYUMNUXYXSXYEMXEHDGN
@@ -54,28 +68,30 @@ In crack mode, program will run until it is stopped with Ctrl+C. Here is a parti
 Français
 
 ```
-./bin/main.x --chiffrer "Cache l'or dans la souche de l'arbre" "exemple playfair"
-key table:
+$ ./bin/main.x --chiffrer "Cache l'or dans la souche de l'arbre" "exemple playfair" --sub WV
+Omitted letter: 'W' Substitute: 'V'
+Key Table:
 E X M P L 
 A Y F I R 
 B C D G H 
-K N O Q S 
-T U V W Z 
-digraphs:
+J K N O Q 
+S T U V Z 
+Digraphs:
 CA CH EL OR DA NS LA SO UC HE DE LA RB RE 
-ciphertext:
-BY DB XE SF BF OK ER KQ XN BL BM ER AH AL 
+Ciphertext:
+BY DB XE QI BF JU ER VJ TD BL BM ER AH AL
 
-./bin/main.x --dechiffrer "BY DB XE SF BF OK ER KQ XN BL BM ER AH AL" "exemple playfair"
-key table:
+./bin/main.x --dechiffrer "BY DB XE QI BF JU ER VJ TD BL BM ER AH AL" "exemple playfair" --sub WV
+Omitted letter: 'W' Substitute: 'V'
+Key Table:
 E X M P L 
 A Y F I R 
 B C D G H 
-K N O Q S 
-T U V W Z 
-digraphs:
-BY DB XE SF BF OK ER KQ XN BL BM ER AH AL 
-deciphered:
+J K N O Q 
+S T U V Z 
+Digraphs:
+BY DB XE QI BF JU ER VJ TD BL BM ER AH AL 
+Deciphered:
 CACHELORDANSLASOUCHEDELARBRE
 
 ./bin/main.x --craquer "EVZTOVBVRPXRQAQGVTRBKVPMEGBKVACLVMIPRWMCIXEOBCOCRWGIBQWMGIBORPOBRWKSDYMRIXPRKLEIRWTSVDTVSOVYEBVOVCVHRWPREGMNWIPACPXEZMFVZICPZCQGZQRVWRUDCLPWWRSRVCAQRWVSBRTVOVBVEGDVPGPIQOCZPCUKFRBVVOBIEGMQERATGXVXPZMCNQEGIBQARBIEVRMQVWEIBLLBCOCMRWMYRWEGWRPUSVBVKCMFDMGECPOSIRRPMKVNCPVBMYCPGITVSVCMRWNAXMRAPWSORBQOMYEVBLVCOHEVMKGECZWIGINVPMRBWIEGCTFRPRVHWMRTPRBQRWPRLBPGQOEVFTPUPIMVOLCMRMLKBPXIIBLYLBGINVCMGEEGPROLXVYVCVSVCMGXVWPCENOCIBMYEVSOOVBVMXNEVWLIBNXINAEUOSLBBLRWXCMYOCVBBEPCBYXIEGEBQAIGCPRWOCCEGPRPCLTLDEMYCLOVBVBLGXBEMVSLEORMDVEBMVLBNQPZ" --langue fr

@@ -7,6 +7,17 @@
 
 namespace playfair
 {
+    char omitted_letter = 'J';
+    char omitted_letter_sub = 'I';
+    char separator_letter = 'X';
+
+    std::string get_cipher_alphabet()
+    {
+        std::string s(ASCII_UPPERCASE);
+        s.erase(std::remove(s.begin(), s.end(), omitted_letter), s.end());
+        return s;
+    }
+
     std::string strip_repeated_letters(const std::string& key)
     {
         std::string s;
@@ -66,7 +77,7 @@ namespace playfair
         {
             if (dg.length() == 1 && c == dg[0])
             {
-                dg += 'X';
+                dg += separator_letter;
                 digraphs.push_back(dg);
                 dg = c;
             }
@@ -82,7 +93,7 @@ namespace playfair
         }
         if (dg.length() == 1)
         {
-            dg += 'X';
+            dg += separator_letter;
             digraphs.push_back(dg);
         }
         return digraphs;
@@ -92,7 +103,7 @@ namespace playfair
     {
         std::string k = fmt_ciphertext(key);
         k = strip_repeated_letters(k);
-        std::string s(CIPHER_ALPHABET);
+        std::string s(get_cipher_alphabet());
         for (char c : k)
         {
             s.erase(std::remove(s.begin(), s.end(), c), s.end());
@@ -168,7 +179,8 @@ namespace playfair
     std::string encipher(const std::string& plaintext, const std::string &key, bool decipher)
     {
         std::vector<std::string> digraphs = to_digraphs(plaintext);
-        std::cout << "key table:\n";
+        std::cout << "Omitted letter: '" << omitted_letter << "' Substitute: '" << omitted_letter_sub << "'\n";
+        std::cout << "Key Table:\n";
         CipherTable tbl = gen_cipher_table(key);
         for (auto row : tbl)
         {
@@ -178,7 +190,7 @@ namespace playfair
             }
             std::cout << std::endl;
         }
-        std::cout << "digraphs:\n";
+        std::cout << "Digraphs:\n";
         for (std::string dg : digraphs)
         {
             std::cout << dg << " ";
@@ -217,11 +229,12 @@ namespace playfair
         s = strip_accents(s);
         std::transform(s.begin(), s.end(), s.begin(), ::toupper);
         s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
-        std::replace(s.begin(), s.end(), 'J', 'I');
-
-        s.erase(std::remove_if(s.begin(), 
-                               s.end(), 
-                               [](unsigned char c){return CIPHER_ALPHABET.find(c) == std::string::npos;}), 
+        std::replace(s.begin(), s.end(), omitted_letter, omitted_letter_sub);
+        std::string cipher_alphabet = get_cipher_alphabet();
+        s.erase(std::remove_if(s.begin(),
+                               s.end(),
+                               [cipher_alphabet](unsigned char c){
+                                   return cipher_alphabet.find(c) == std::string::npos;}), 
                 s.end());
         return s;
     }
