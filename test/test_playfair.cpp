@@ -57,6 +57,7 @@ TEST(playfair, plaintext_to_digrams)
     separator_letter = 'Q';
     expected = {"BA", "TQ", "TA", "LI", "ON"};
     ASSERT_EQ(to_digraphs("battalion"), expected);
+    separator_letter = 'X';
 }
 
 TEST(playfair, gen_cipher_table_string)
@@ -136,4 +137,6 @@ TEST(playfair, decipher_fr_sub)
     std::string expected_ciphertext = "BY DB XE QI BF JU ER VJ TD BL BM ER AH AL ";
     ASSERT_EQ(encipher("Cache l'or dans la souche de l'arbre", "exemple playfair"), expected_ciphertext);
     ASSERT_EQ(decipher(expected_ciphertext, "exemple playfair"), "CACHELORDANSLASOUCHEDELARBRE");
+    omitted_letter = 'J';
+    omitted_letter_sub = 'I';
 }
