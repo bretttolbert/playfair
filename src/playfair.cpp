@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <regex>
+#include <sstream>
 
 namespace playfair
 {
@@ -181,12 +182,30 @@ namespace playfair
     std::string encipher(const std::string& plaintext, const std::string &key, bool decipher)
     {
         std::vector<std::string> digraphs = to_digraphs(plaintext);
-        return encipher_digraphs(digraphs, gen_cipher_table(key), decipher);
+        std::cout << "key table:\n";
+        CipherTable tbl = gen_cipher_table(key);
+        for (auto row : tbl)
+        {
+            for (auto c : row)
+            {
+                std::cout << c << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "digraphs:\n";
+        for (std::string dg : digraphs)
+        {
+            std::cout << dg << " ";
+        }
+        std::cout << std::endl;
+        return encipher_digraphs(digraphs, tbl, decipher);
     }
 
     std::string decipher(const std::string& ciphertext, const std::string &key)
     {
-        return encipher(ciphertext, key, true);
+        std::string s = encipher(ciphertext, key, true);
+        s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
+        return s;
     }
 
     std::string decipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key)
@@ -196,12 +215,12 @@ namespace playfair
 
     std::string encipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key, bool decipher)
     {
-        std::string ciphertext;
+        std::ostringstream ciphertext;
         for (std::string dg : digraphs)
         {
-            ciphertext += encipher_digraph(dg, key, decipher);
+            ciphertext << encipher_digraph(dg, key, decipher) << " ";
         }
-        return ciphertext;
+        return ciphertext.str();
     }
 
     bool is_valid_ciphertext(const std::string& ciphertext)

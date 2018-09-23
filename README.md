@@ -36,3 +36,10 @@ Here is a particularly difficult one that take a long time to crack:
 ```
 ./bin/main.x --crack "ZK DW KC SE XM ZK DW VF RV LQ VF WN ED MZ LW QE GY VF KD XF MP WC GO BF MU GY QF UG ZK NZ IM GK FK GY ZS GQ LN DP AB BM CK OQ KL EZ KF DH YK ZN LK FK EU YK FK KZ RY YD FT PC HD GQ MZ CP YD KL KF EZ CI ON DP AC WK QS SY QL UN DU RU GY NS"
 ```
+
+Français
+
+```
+./bin/main.x --chiffrer "Cache l'or dans la souche de l'arbre" EXMPLAYFIR
+```
+

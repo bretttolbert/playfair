@@ -44,7 +44,9 @@ int main(int argc, char** argv)
     {
         std::string plaintext = argv[2];
         std::string key = argv[3];
-        std::cout << encipher(plaintext, key) << std::endl;
+        std::string ciphertext = encipher(plaintext, key);
+        std::cout << "ciphertext:\n";
+        std::cout << ciphertext << std::endl;
     }
     else if (operation == "--decipher" || operation == "--dechiffrer")
     {
@@ -55,7 +57,9 @@ int main(int argc, char** argv)
         {
             std::cout << "Invalid ciphertext\n";
         }
-        std::cout << decipher(ciphertext, key) << std::endl;
+        std::string plaintext = decipher(ciphertext, key);
+        std::cout << "deciphered:\n";
+        std::cout << plaintext << std::endl;
     }
     else if (operation == "--crack" || operation == "--craquer")
     {
