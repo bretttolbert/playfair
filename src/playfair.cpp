@@ -1,6 +1,8 @@
 #include "playfair.h"
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <regex>
 
 namespace playfair
 {
@@ -19,13 +21,57 @@ namespace playfair
         return true;
     }
 
-    std::vector<std::string> plaintext_to_digraphs(const std::string &plaintext)
+    using CharMap = std::vector<std::pair<std::string, std::vector<std::string>>>;
+    CharMap CHAR_REPLACEMENTS {
+        {"A", {"\u00C0", "\u00C1", "\u00C2", "\u00C3", "\u00C4", "\u00C5"}},
+        {"AE", {"\u00C6"}},
+        {"C", {"\u00C7"}},
+        {"E", {"\u00C8", "\u00C9", "\u00CA", "\u00CB"}},
+        {"I", {"\u00CC", "\u00CD", "\u00CE", "\u00CF"}},
+        {"N", {"\u00D1"}},
+        {"O", {"\u00D2", "\u00D3", "\u00D4", "\u00D5", "\u00D6", "\u00D8"}},
+        {"U", {"\u00D9", "\u00DA", "\u00DB", "\u00DC"}},
+        {"Y", {"\u00DD"}},
+        {"SS", {"\u00DF"}},
+        {"a", {"\u00E0", "\u00E1", "\u00E2", "\u00E3", "\u00E4", "\u00E5"}},
+        {"ae", {"\u00E6"}},
+        {"c", {"\u00E7"}},
+        {"e", {"\u00E8", "\u00E9", "\u00EA", "\u00EB"}},
+        {"i", {"\u00EC", "\u00ED", "\u00EE", "\u00EF"}},
+        {"n", {"\u00F1"}},
+        {"o", {"\u00F2", "\u00F3", "\u00F4", "\u00F5", "\u00F6", "\u00F8"}},
+        {"u", {"\u00F9", "\u00FA", "\u00FB", "\u00FC"}},
+        {"y", {"\u00FD", "\u00ff"}},
+        {"th", {"\u00F0", "\u00FE"}}
+    };
+
+    std::string strip_accents(const std::string& text)
+    {
+        std::string s(text);
+        for (CharMap::const_iterator it = CHAR_REPLACEMENTS.begin(); it != CHAR_REPLACEMENTS.end(); ++it)
+        {
+            for (std::string codepoint : it->second)
+            {
+                s = std::regex_replace(s, std::regex(codepoint), it->first);
+            }
+        }
+        return s;
+    }
+
+    std::vector<std::string> to_digraphs(const std::string &text)
     {
         std::vector<std::string> digraphs;
-        std::string s = plaintext;
+        std::string s = text;
+        s = strip_accents(s);
         std::transform(s.begin(), s.end(), s.begin(), ::toupper);
         s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
         std::replace(s.begin(), s.end(), 'J', 'I');
+
+        s.erase(std::remove_if(s.begin(), 
+                               s.end(), 
+                               [](unsigned char c){return CIPHER_ALPHABET.find(c) == std::string::npos;}), 
+                s.end());
+
         std::string dg;
         for (char c : s)
         {
@@ -134,12 +180,26 @@ namespace playfair
 
     std::string encipher(const std::string& plaintext, const std::string &key, bool decipher)
     {
-        CipherTable tbl = gen_cipher_table(key);
-        std::vector<std::string> digraphs = plaintext_to_digraphs(plaintext);
+        std::vector<std::string> digraphs = to_digraphs(plaintext);
+        return encipher_digraphs(digraphs, gen_cipher_table(key), decipher);
+    }
+
+    std::string decipher(const std::string& ciphertext, const std::string &key)
+    {
+        return encipher(ciphertext, key, true);
+    }
+
+    std::string decipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key)
+    {
+        return encipher_digraphs(digraphs, key, true);
+    }
+
+    std::string encipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key, bool decipher)
+    {
         std::string ciphertext;
         for (std::string dg : digraphs)
         {
-            ciphertext += encipher_digraph(dg, tbl, decipher);
+            ciphertext += encipher_digraph(dg, key, decipher);
         }
         return ciphertext;
     }
@@ -155,15 +215,5 @@ namespace playfair
         std::transform(s.begin(), s.end(), s.begin(), ::toupper);
         s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
         return s;
-    }
-
-    std::string decipher(const std::string& ciphertext, const std::string &key)
-    {
-        std::string s = fmt_ciphertext(ciphertext);
-        if (!is_valid_ciphertext(s))
-        {
-            throw InvalidCiphertextException();
-        }
-        return encipher(s, key, true);
     }
 }

@@ -1,6 +1,12 @@
 #pragma once
 #include <string>
 
+/**
+ * Source: 
+ * http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-playfair/
+ * http://practicalcryptography.com/cryptanalysis/text-characterisation/quadgrams/
+ * http://practicalcryptography.com/cryptanalysis/letter-frequencies-various-languages/
+ */
 extern float qgram_stats_array_en[];
 extern float qgram_stats_array_fr[];
 

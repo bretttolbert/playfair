@@ -104,17 +104,18 @@ namespace playfair
         }
     }
 
-    double crack_iter(const std::string& ciphertext, std::string& bestkey, const std::string& lang)
+    double crack_iter(const std::vector<std::string>& digraphs, std::string& bestkey, const std::string& lang)
     {
         std::string maxkey = bestkey;
-        double maxscore = scoretext::score_text_qgram(decipher(ciphertext, maxkey), lang);
+        std::string plaintext = decipher_digraphs(digraphs, gen_cipher_table(maxkey));
+        double maxscore = scoretext::score_text_qgram(plaintext, lang);
         double bestscore = maxscore;
         for (float T = START_TEMPERATURE; T >= 0; T-=TEMPERATURE_STEP)
         {
             for (size_t count = 0; count < ITERATIONS; count++)
             { 
                 std::string testkey = rnd_mod(maxkey);    
-                std::string plaintext = decipher(ciphertext, testkey);
+                std::string plaintext = decipher_digraphs(digraphs, gen_cipher_table(testkey));
                 double score = scoretext::score_text_qgram(plaintext, lang);
                 double dF = score - maxscore;
                 if (dF >= 0)
@@ -144,18 +145,25 @@ namespace playfair
 
     double crack(const std::string& ciphertext, std::string lang)
     {
-        std::string text = fmt_ciphertext(ciphertext);
-        std::cout << "Attemping to crack:\n" << text << std::endl;
+        std::vector<std::string> digraphs = to_digraphs(ciphertext);
+        std::cout << "Attemping to crack:\n" << ciphertext << std::endl;
+        std::cout << "Presumed language: " << lang << std::endl;
         std::cout << "This may take a few minutes.\n";
-        double maxscore = -99e99;
         std::string key = CIPHER_ALPHABET;
+
+        std::string plaintext = decipher_digraphs(digraphs, gen_cipher_table(key));
+        double maxscore = scoretext::score_text_qgram(plaintext, lang);
+        std::cout << "Initial score: " << maxscore << std::endl;
+        std::cout << "    Key: " << key << std::endl;
+        std::cout << "    Plaintext: " << plaintext << std::endl;
+
         for (size_t i=0; ; i++)
         {
-            double score = crack_iter(text, key, lang);
+            double score = crack_iter(digraphs, key, lang);
             if (score > maxscore)
             {
                 maxscore = score;
-                std::string plaintext = decipher(text, key);
+                std::string plaintext = decipher_digraphs(digraphs, gen_cipher_table(key));
                 std::cout << "Best score so far: " << score << ", on iteration " << i << std::endl;
                 std::cout << "    Key: " << key << std::endl;
                 std::cout << "    Plaintext: " << plaintext << std::endl;

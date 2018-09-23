@@ -40,28 +40,39 @@ int main(int argc, char** argv)
     }
 
     std::string operation = argv[1];
-    if (operation == "--encipher")
+    if (operation == "--encipher" || operation == "--chiffrer")
     {
         std::string plaintext = argv[2];
         std::string key = argv[3];
         std::cout << encipher(plaintext, key) << std::endl;
     }
-    else if (operation == "--decipher")
+    else if (operation == "--decipher" || operation == "--dechiffrer")
     {
         std::string ciphertext = argv[2];
         std::string key = argv[3];
+        ciphertext = fmt_ciphertext(ciphertext);
+        if (!is_valid_ciphertext(ciphertext))
+        {
+            std::cout << "Invalid ciphertext\n";
+        }
         std::cout << decipher(ciphertext, key) << std::endl;
     }
-    else if (operation == "--crack")
+    else if (operation == "--crack" || operation == "--craquer")
     {
         std::string ciphertext = argv[2];
         std::string lang = "en";
         if (argc >= 5)
         {
-            if (std::string(argv[3]) == "--lang")
+            std::string larg = std::string(argv[3]);
+            if (larg == "--lang" || larg == "--langue")
             {
                 lang = argv[4];
             }
+        }
+        ciphertext = fmt_ciphertext(ciphertext);
+        if (!is_valid_ciphertext(ciphertext))
+        {
+            std::cout << "Invalid ciphertext\n";
         }
         crack(ciphertext, lang);
     }

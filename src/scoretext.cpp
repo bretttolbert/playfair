@@ -1,6 +1,3 @@
-/**
- * Source: http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-playfair/
- */
 #include "scoretext.h"
 #include "qgram_data_en.h"
 #include "qgram_data_fr.h"

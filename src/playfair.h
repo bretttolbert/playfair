@@ -13,19 +13,13 @@ namespace playfair
         }
     };
 
-    struct InvalidCiphertextException: public std::exception
-    {
-        const char* what() const throw()
-        {
-            return "Invalid cipher text";
-        }
-    };
-
     const std::string CIPHER_ALPHABET = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
 
     bool is_valid_key(const std::string& key);
 
-    std::vector<std::string> plaintext_to_digraphs(const std::string &plaintext);
+    std::string strip_accents(const std::string& text);
+
+    std::vector<std::string> to_digraphs(const std::string& text);
 
     std::string gen_cipher_table_string(const std::string& key);
 
@@ -39,11 +33,15 @@ namespace playfair
 
     std::string encipher_digraph(const std::string& digraph, const CipherTable& tbl, bool decipher=false);
 
-    std::string encipher(const std::string& plaintext, const std::string &key, bool decipher=false);
+    std::string encipher(const std::string& plaintext, const std::string& key, bool decipher=false);
+    std::string decipher(const std::string& ciphertext, const std::string& key);
+
+    std::string decipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key);
+    std::string encipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key, bool decipher=false);
 
     bool is_valid_ciphertext(const std::string& ciphertext);
 
     std::string fmt_ciphertext(const std::string& ciphertext);
 
-    std::string decipher(const std::string& ciphertext, const std::string &key);
+
 }
