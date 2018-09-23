@@ -7,19 +7,17 @@
 
 namespace playfair
 {
-    bool is_valid_key(const std::string& key)
+    std::string strip_repeated_letters(const std::string& key)
     {
-        std::string used;
+        std::string s;
         for (char c : key)
         {
-            if (used.find(c) != std::string::npos 
-            || CIPHER_ALPHABET.find(c) == std::string::npos)
+            if (s.find(c) == std::string::npos)
             {
-                return false;
+                s += c;
             }
-            used += c;
         }
-        return true;
+        return s;
     }
 
     using CharMap = std::vector<std::pair<std::string, std::vector<std::string>>>;
@@ -62,17 +60,7 @@ namespace playfair
     std::vector<std::string> to_digraphs(const std::string &text)
     {
         std::vector<std::string> digraphs;
-        std::string s = text;
-        s = strip_accents(s);
-        std::transform(s.begin(), s.end(), s.begin(), ::toupper);
-        s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
-        std::replace(s.begin(), s.end(), 'J', 'I');
-
-        s.erase(std::remove_if(s.begin(), 
-                               s.end(), 
-                               [](unsigned char c){return CIPHER_ALPHABET.find(c) == std::string::npos;}), 
-                s.end());
-
+        std::string s = fmt_ciphertext(text);
         std::string dg;
         for (char c : s)
         {
@@ -102,16 +90,14 @@ namespace playfair
 
     std::string gen_cipher_table_string(const std::string& key)
     {
-        if (!is_valid_key(key))
-        {
-            throw InvalidKeyException();
-        }
+        std::string k = fmt_ciphertext(key);
+        k = strip_repeated_letters(k);
         std::string s(CIPHER_ALPHABET);
-        for (char c : key)
+        for (char c : k)
         {
             s.erase(std::remove(s.begin(), s.end(), c), s.end());
         }
-        return key + s;
+        return k + s;
     }
 
     CipherTable gen_cipher_table(const std::string& key)
@@ -223,16 +209,18 @@ namespace playfair
         return ciphertext.str();
     }
 
-    bool is_valid_ciphertext(const std::string& ciphertext)
+    std::string fmt_ciphertext(const std::string& text)
     {
-        return ciphertext.find_first_not_of(CIPHER_ALPHABET) == std::string::npos;
-    }
-
-    std::string fmt_ciphertext(const std::string& ciphertext)
-    {
-        std::string s(ciphertext);
+        std::string s(text);
+        s = strip_accents(s);
         std::transform(s.begin(), s.end(), s.begin(), ::toupper);
         s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
+        std::replace(s.begin(), s.end(), 'J', 'I');
+
+        s.erase(std::remove_if(s.begin(), 
+                               s.end(), 
+                               [](unsigned char c){return CIPHER_ALPHABET.find(c) == std::string::npos;}), 
+                s.end());
         return s;
     }
 }

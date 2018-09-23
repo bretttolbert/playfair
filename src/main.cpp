@@ -52,11 +52,6 @@ int main(int argc, char** argv)
     {
         std::string ciphertext = argv[2];
         std::string key = argv[3];
-        ciphertext = fmt_ciphertext(ciphertext);
-        if (!is_valid_ciphertext(ciphertext))
-        {
-            std::cout << "Invalid ciphertext\n";
-        }
         std::string plaintext = decipher(ciphertext, key);
         std::cout << "deciphered:\n";
         std::cout << plaintext << std::endl;
@@ -72,11 +67,6 @@ int main(int argc, char** argv)
             {
                 lang = argv[4];
             }
-        }
-        ciphertext = fmt_ciphertext(ciphertext);
-        if (!is_valid_ciphertext(ciphertext))
-        {
-            std::cout << "Invalid ciphertext\n";
         }
         crack(ciphertext, lang);
     }

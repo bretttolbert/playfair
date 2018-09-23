@@ -15,7 +15,7 @@ namespace playfair
 
     const std::string CIPHER_ALPHABET = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
 
-    bool is_valid_key(const std::string& key);
+    std::string strip_repeated_letters(const std::string& key);
 
     std::string strip_accents(const std::string& text);
 
@@ -39,9 +39,11 @@ namespace playfair
     std::string decipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key);
     std::string encipher_digraphs(const std::vector<std::string>& digraphs, const CipherTable& key, bool decipher=false);
 
-    bool is_valid_ciphertext(const std::string& ciphertext);
-
-    std::string fmt_ciphertext(const std::string& ciphertext);
-
-
+    /**
+     * Converts accented characters to normal
+     * Converts to uppercase
+     * Removes whitespace
+     * Converts OMITTED_LETTER (default=J) to OMITTED_LETTER_SUBSTITUTE (default=I)
+     */
+    std::string fmt_ciphertext(const std::string& text);
 }

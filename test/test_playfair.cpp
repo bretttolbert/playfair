@@ -17,12 +17,16 @@ std::vector<std::string> TEST_CIPHER_TABLE2{
     "NOQRT",
     "UVXYZ"};
 
-TEST(playfair, is_valid_key)
+std::vector<std::string> TEST_CIPHER_TABLE3{
+    "EXMPL",
+    "AYFIR",
+    "BCDGH",
+    "KNOQS",
+    "TUVWZ"};
+
+TEST(playfair, strip_repeated_letters)
 {
-    ASSERT_TRUE(is_valid_key("BRET"));
-    ASSERT_FALSE(is_valid_key("bret"));
-    ASSERT_FALSE(is_valid_key("BRETT"));
-    ASSERT_FALSE(is_valid_key("JOE"));
+    ASSERT_EQ(strip_repeated_letters("EXEMPLEPLAYFAIR"), "EXMPLAYFIR");
 }
 
 TEST(playfair, strip_accents)
@@ -57,12 +61,14 @@ TEST(playfair, gen_cipher_table_string)
     ASSERT_EQ(gen_cipher_table_string(""), CIPHER_ALPHABET);
     ASSERT_EQ(gen_cipher_table_string("PALMERSTON"), "PALMERSTONBCDFGHIKQUVWXYZ");
     ASSERT_EQ(gen_cipher_table_string("PASWD"), "PASWDBCEFGHIKLMNOQRTUVXYZ");
+    ASSERT_EQ(gen_cipher_table_string("exemple playfair"), "EXMPLAYFIRBCDGHKNOQSTUVWZ");
 }
 
 TEST(playfair, gen_cipher_table)
 {
     ASSERT_EQ(gen_cipher_table("PALMERSTON"), TEST_CIPHER_TABLE);
     ASSERT_EQ(gen_cipher_table("PASWD"), TEST_CIPHER_TABLE2);
+    ASSERT_EQ(gen_cipher_table("exemple playfair"), TEST_CIPHER_TABLE3);
 }
 
 TEST(playfair, get_letter_row_col)
